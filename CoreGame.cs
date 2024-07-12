@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using grimchase.Objects;
 
 namespace grimchase;
 
@@ -7,6 +8,7 @@ public class CoreGame : Game
 {
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
+    public Tile[,] TileList;
 
     public CoreGame()
     {
@@ -22,6 +24,17 @@ public class CoreGame : Game
         graphics.PreferredBackBufferWidth = 1600;
         graphics.PreferredBackBufferHeight = 900;
         graphics.ApplyChanges();
+
+        TileList = new Tile[10,10];
+
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                Vector2 tilepos = new(400 + (i+j)*32, 400 + (j-i)*16);
+                TileList[i,j] = new(this, tilepos);
+            }
+        }
 
         base.Initialize();
     }
@@ -40,8 +53,13 @@ public class CoreGame : Game
     {
         // Clear the screen and begin rendering
         GraphicsDevice.Clear(Color.Black);
-        
+
         _spriteBatch.Begin();
+
+        foreach (Tile tile in TileList)
+        {
+            tile.Draw(_spriteBatch);
+        }
 
         _spriteBatch.End();
 
