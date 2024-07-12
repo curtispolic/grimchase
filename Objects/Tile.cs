@@ -7,7 +7,7 @@ public class Tile
 {
     public CoreGame GameParent;
     public Texture2D Texture;
-    public Vector2 Position;
+    public Vector2 Position, Offset;
     public Tile(CoreGame parent, Vector2 pos)
     {
         GameParent = parent;
@@ -18,10 +18,11 @@ public class Tile
     public void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("tile");
+        Offset = new(Texture.Width / 2, Texture.Height / 2);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
-        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Offset - playerPos, Vector2.One, SpriteEffects.None, 0f);
     }
 }
