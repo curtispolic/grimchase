@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework;
 
 namespace grimchase.Objects;
 
-public class Tile
+public class Wall
 {
     public CoreGame GameParent;
     public Texture2D Texture;
     public Vector2 Position, Offset, ScreenCenter;
-    public Tile(CoreGame parent, Vector2 pos, Vector2 screenCenter)
+    public Wall(CoreGame parent, Vector2 pos, Vector2 screenCenter)
     {
         GameParent = parent;
         Position = pos;
@@ -18,7 +18,7 @@ public class Tile
 
     public void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("tile");
+        Texture = GameParent.Content.Load<Texture2D>("wall");
         Offset = new(Texture.Width / 2, Texture.Height - 16);
     }
 

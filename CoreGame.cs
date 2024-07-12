@@ -11,6 +11,7 @@ public class CoreGame : Game
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     public Tile[,] TileList;
+    public Wall[,] WallList;
     public Player GamePlayer;
     public Vector2 mouseTarget;
     public bool leftMouseDown;
@@ -43,7 +44,18 @@ public class CoreGame : Game
             for (int j = 0; j < MAP_SIZE; j++)
             {
                 Vector2 tilepos = new((i+j)*32, (j-i)*16);
-                TileList[i,j] = new(this, tilepos);
+                TileList[i,j] = new(this, tilepos, screenCenter);
+            }
+        }
+
+        WallList = new Wall[MAP_SIZE, MAP_SIZE];
+
+        for (int i = 0; i < MAP_SIZE; i++)
+        {
+            for (int j = 0; j < MAP_SIZE; j++)
+            {
+                Vector2 wallpos = new((i+j)*32, (j-i)*16);
+                WallList[i,j] = new(this, wallpos, screenCenter);
             }
         }
 
@@ -69,7 +81,7 @@ public class CoreGame : Game
             {
                 // To ensure only one click goes through
                 leftMouseDown = true;
-                GamePlayer.Target = new(mouseState.X, mouseState.Y);
+                GamePlayer.Target = new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter;
             }
             else if (mouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
             {
@@ -92,6 +104,11 @@ public class CoreGame : Game
         foreach (Tile tile in TileList)
         {
             tile.Draw(_spriteBatch, GamePlayer.Position);
+        }
+
+        for (int i = 14; i >= 0; i--)
+        {
+            WallList[i,0].Draw(_spriteBatch, GamePlayer.Position);
         }
 
         GamePlayer.Draw(_spriteBatch);

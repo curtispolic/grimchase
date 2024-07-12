@@ -13,8 +13,8 @@ public class Player
     {
         GameParent = parent;
         ScreenCenter = screenCenter;
-        Position = ScreenCenter;
-        Target = ScreenCenter;
+        Position = new(64,0);
+        Target = Position;
         Console.WriteLine($"{ScreenCenter}     {Position}     {Target}");
         LoadContent();
     }
@@ -27,16 +27,23 @@ public class Player
 
     public void Update(GameTime gameTime)
     {
-        if ((float) gameTime.ElapsedGameTime.TotalMilliseconds == 0 || Target == ScreenCenter)
+        // Prevent divide by zero
+        if ((float) gameTime.ElapsedGameTime.TotalMilliseconds == 0 || Target == Position)
         {
             return;
         }
 
-        Vector2 step = Target - ScreenCenter;
+        // Return if at (or very close to) target
+        if (Math.Abs(Target.X - Position.X) < 2 && Math.Abs(Target.Y - Position.Y) < 2)
+        {
+            return;
+        }
+
+        Vector2 step = Target - Position;
         step /= Math.Abs(step.X) + Math.Abs(step.Y);
         step *= (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         step /= 5;
-        Position -= step;       
+        Position += step; 
         Console.WriteLine($"{ScreenCenter}     {Position}     {Target}");
     }
 
