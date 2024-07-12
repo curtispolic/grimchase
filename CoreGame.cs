@@ -9,6 +9,7 @@ public class CoreGame : Game
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     public Tile[,] TileList;
+    public Player GamePlayer;
 
     public CoreGame()
     {
@@ -36,6 +37,8 @@ public class CoreGame : Game
             }
         }
 
+        GamePlayer = new(this);
+
         base.Initialize();
     }
 
@@ -60,6 +63,8 @@ public class CoreGame : Game
         {
             tile.Draw(_spriteBatch);
         }
+
+        GamePlayer.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
