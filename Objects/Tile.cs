@@ -3,27 +3,17 @@ using Microsoft.Xna.Framework;
 
 namespace grimchase.Objects;
 
-public class Tile
+public class Tile : Drawable
 {
-    public CoreGame GameParent;
-    public Texture2D Texture;
-    public Vector2 Position, Offset, ScreenCenter;
-    public Tile(CoreGame parent, Vector2 pos, Vector2 screenCenter)
+    public Tile(CoreGame parent, Vector2 pos, Vector2 screenCenter): base(parent, pos, screenCenter)
     {
-        GameParent = parent;
-        Position = pos;
-        ScreenCenter = screenCenter;
+        Collision = false;
         LoadContent();
     }
 
-    public void LoadContent()
+    public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("tile");
-        Offset = new(Texture.Width / 2, Texture.Height - 16);
-    }
-
-    public void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
-    {
-        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
+        base.LoadContent();
     }
 }

@@ -3,27 +3,32 @@ using Microsoft.Xna.Framework;
 
 namespace grimchase.Objects;
 
-public class Wall
+public class Wall : Drawable
 {
-    public CoreGame GameParent;
-    public Texture2D Texture;
-    public Vector2 Position, Offset, ScreenCenter;
-    public Wall(CoreGame parent, Vector2 pos, Vector2 screenCenter)
+    public Texture2D TransparentTexture;
+    public Wall(CoreGame parent, Vector2 pos, Vector2 screenCenter): base(parent, pos, screenCenter)
     {
-        GameParent = parent;
-        Position = pos;
-        ScreenCenter = screenCenter;
+        Collision = true;
         LoadContent();
     }
 
-    public void LoadContent()
+    public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("wall");
-        Offset = new(Texture.Width / 2, Texture.Height - 16);
+        TransparentTexture = GameParent.Content.Load<Texture2D>("wall_clear");
+        base.LoadContent();
     }
 
-    public void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
+    public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
-        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
+        Vector2 test = Position - playerPos;
+        if (test.X > -48 && test.X < 32 && test.Y < 80 && test.Y > -4)
+        {
+            spriteBatch.Draw(TransparentTexture, Position, null, Color.White, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
+        }
+        else
+        {
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
+        }
     }
 }

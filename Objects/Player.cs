@@ -4,22 +4,16 @@ using System;
 
 namespace grimchase.Objects;
 
-public class Player
+public class Player : Drawable
 {
-    public CoreGame GameParent;
-    public Texture2D Texture;
-    public Vector2 Position, Offset, ScreenCenter, Target;
-    public Player(CoreGame parent, Vector2 screenCenter)
+    public Vector2 Target;
+    public Player(CoreGame parent, Vector2 screenCenter): base(parent, new(64,0), screenCenter)
     {
-        GameParent = parent;
-        ScreenCenter = screenCenter;
-        Position = new(64,0);
         Target = Position;
-        Console.WriteLine($"{ScreenCenter}     {Position}     {Target}");
         LoadContent();
     }
 
-    public void LoadContent()
+    public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("guy");
         Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
@@ -43,12 +37,12 @@ public class Player
         step /= Math.Abs(step.X) + Math.Abs(step.Y);
         step *= (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         step /= 5;
-        Position += step; 
-        Console.WriteLine($"{ScreenCenter}     {Position}     {Target}");
+        Position += step;
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
+        // Intentional override to discard playerPos to call all Drawables together
         spriteBatch.Draw(Texture, ScreenCenter, null, Color.White, 0f, Offset, Vector2.One, SpriteEffects.None, 0f);
     }
 }
