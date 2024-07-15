@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace grimchase.Objects;
@@ -37,9 +37,109 @@ public class MapGenerator
         }
 
         List<Tuple<int, int, int, int>> roomList = RecurseRooms(tileArray, 0, 0, levelSize - 1, levelSize - 1);
+        CreateDoors(tileArray, roomList);
         PrintLevel(tileArray, levelSize);
 
         return CreateDrawables(tileArray, levelSize);
+    }
+
+    public void CreateDoors(int[,] tileArray, List<Tuple<int, int, int, int>> roomList)
+    {
+        List<Tuple<int, int, int, int>> completedRooms = new();
+        Random rand = new();
+        completedRooms.Add(roomList[0]);
+        roomList.RemoveAt(0);
+
+        while (roomList.Count != 0)
+        {
+            bool doored = false;
+            foreach (Tuple<int, int, int, int> newRoom in roomList)
+            {
+                foreach (Tuple<int, int, int, int> compRoom in completedRooms)
+                {
+                    if (AddDoor(tileArray, newRoom, compRoom))
+                    {
+                        doored = true;
+                        completedRooms.Add(newRoom);
+                        completedRooms = completedRooms.OrderBy(_ => rand.Next()).ToList();
+                        roomList.Remove(newRoom);
+                        break;
+                    }
+                }
+                if (doored) break;
+            }
+        }
+
+        return;
+    }
+
+    public bool AddDoor(int[,] tileArray, Tuple<int,int,int,int> room1, Tuple<int,int,int,int> room2)
+    {
+        Random rand = new();
+        // Room 1 to the left of Room 2
+        if (room1.Item3 == room2.Item1 && room1.Item4 > room2.Item2 && room1.Item2 < room2.Item4)
+        {
+            // Find how they overlap
+            if (room1.Item4 - room2.Item2 > room2.Item4 - room1.Item2)
+            {
+                int doorY = rand.Next(room1.Item2 + 1, room2.Item4);
+                tileArray[room1.Item3,doorY] = 2;
+            }
+            else
+            {
+                int doorY = rand.Next(room2.Item2 + 1, room1.Item4);
+                tileArray[room1.Item3,doorY] = 2;
+            }
+            return true;
+        }
+        // Room 1 above Room 2
+        else if (room1.Item4 == room2.Item2 && room1.Item3 > room2.Item1 && room1.Item1 < room2.Item3)
+        {
+            if (room1.Item3 - room2.Item1 > room2.Item3 - room1.Item1)
+            {
+                int doorX = rand.Next(room1.Item1 + 1, room2.Item3);
+                tileArray[doorX,room1.Item4] = 2;
+            }
+            else
+            {
+                int doorX = rand.Next(room2.Item1 + 1, room1.Item3);
+                tileArray[doorX,room1.Item4] = 2;
+            }
+            return true;
+        }
+        // Room 1 to the right
+        else if (room1.Item1 == room2.Item3 && room2.Item4 > room1.Item2 && room2.Item2 < room1.Item4)
+        {
+            // Find how they overlap
+            if (room2.Item4 - room1.Item2 > room1.Item4 - room2.Item2)
+            {
+                int doorY = rand.Next(room2.Item2 + 1, room1.Item4);
+                tileArray[room1.Item1,doorY] = 2;
+            }
+            else
+            {
+                int doorY = rand.Next(room1.Item2 + 1, room2.Item4);
+                tileArray[room1.Item1,doorY] = 2;
+            }
+            return true;
+        }
+        // Room 1 below
+        else if (room1.Item2 == room2.Item4 && room2.Item3 > room1.Item1 && room2.Item1 < room1.Item3)
+        {
+            if (room2.Item3 - room1.Item1 > room1.Item3 - room2.Item1)
+            {
+                int doorX = rand.Next(room2.Item1 + 1, room1.Item3);
+                tileArray[doorX,room1.Item2] = 2;
+            }
+            else
+            {
+                int doorX = rand.Next(room1.Item1 + 1, room2.Item3);
+                tileArray[doorX,room1.Item2] = 2;
+            }
+            return true;
+        }
+        
+        return false;
     }
 
     public List<Tuple<int,int,int,int>> RecurseRooms(int[,] tileArray, int startX, int startY, int endX, int endY)
