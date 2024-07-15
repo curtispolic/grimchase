@@ -35,25 +35,12 @@ public class CoreGame : Game
         leftMouseDown = false;
         mouseTarget = screenCenter;
 
-        int MAP_SIZE = 15;
+        int MAP_SIZE = 50;
 
         DrawableList = new();
 
-        for (int i = 0; i < MAP_SIZE; i++)
-        {
-            for (int j = 0; j < MAP_SIZE; j++)
-            {
-                Vector2 objpos = new((i+j)*32, (j-i)*16);
-                if (i == 14 || j == 0 || i == 0 || j == 14)
-                {
-                    DrawableList.Add(new Wall(this, objpos, screenCenter));
-                }
-                else
-                {
-                    DrawableList.Add(new Tile(this, objpos, screenCenter));
-                }
-            }
-        }
+        MapGenerator mapGenerator = new(this, screenCenter);
+        DrawableList = mapGenerator.CreateRoomsLevel(MAP_SIZE);
 
         GamePlayer = new(this, screenCenter);
         
