@@ -3,13 +3,16 @@
 Planned engine for an ARPG with various, undecided mechanics and features!
 
 Todo:
-- Wall collisions
 - Pathfinding
 - Enemies to battle
+- Skilling (i.e Runescape mining)
 - Loot / Inventory
 - Spells
 - Mana / HP
 - Merchants
+- Improve Map Generation
+    - Level types
+    - Special event rooms
 
 Notes:
 - Maintain VERY rudimentary loot to begin with
