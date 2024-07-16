@@ -11,7 +11,7 @@ public class CoreGame : Game
 {
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
-    public List<Drawable> DrawableList;
+    public List<Drawable> DrawableList, CollidableList;
     public Player GamePlayer;
     public Vector2 mouseTarget;
     public bool leftMouseDown;
@@ -41,6 +41,15 @@ public class CoreGame : Game
 
         MapGenerator mapGenerator = new(this, screenCenter);
         DrawableList = mapGenerator.CreateRoomsLevel(MAP_SIZE);
+        CollidableList = new();
+
+        foreach (Drawable drawable in DrawableList)
+        {
+            if (drawable.Collision)
+            {
+                CollidableList.Add(drawable);
+            }
+        }
 
         GamePlayer = new(this, screenCenter);
         
@@ -74,7 +83,7 @@ public class CoreGame : Game
             }
         }
 
-        GamePlayer.Update(gameTime);
+        GamePlayer.Update(gameTime, CollidableList);
 
         base.Update(gameTime);
     }

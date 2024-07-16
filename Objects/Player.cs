@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace grimchase.Objects;
 
@@ -19,7 +20,7 @@ public class Player : Drawable
         Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
     }
 
-    public void Update(GameTime gameTime)
+    public void Update(GameTime gameTime, List<Drawable> collidableList)
     {
         // Prevent divide by zero
         if ((float) gameTime.ElapsedGameTime.TotalMilliseconds == 0 || Target == Position)
@@ -37,6 +38,15 @@ public class Player : Drawable
         step /= Math.Abs(step.X) + Math.Abs(step.Y);
         step *= (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         step /= 5;
+
+        foreach (Drawable collidable in collidableList)
+        {
+            if (collidable.CheckCollision(Position + step))
+            {
+                return;
+            }
+        }
+
         Position += step;
     }
 

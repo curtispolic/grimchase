@@ -4,7 +4,6 @@ Planned engine for an ARPG with various, undecided mechanics and features!
 
 Todo:
 - Wall collisions
-- Random map generation
 - Pathfinding
 - Enemies to battle
 - Loot / Inventory
