@@ -12,6 +12,7 @@ public class CoreGame : Game
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     public List<Drawable> DrawableList, CollidableList;
+    public int[,] TileArray;
     public Player GamePlayer;
     public Vector2 mouseTarget;
     public bool leftMouseDown;
@@ -40,7 +41,7 @@ public class CoreGame : Game
         DrawableList = new();
 
         MapGenerator mapGenerator = new(this, screenCenter);
-        DrawableList = mapGenerator.CreateRoomsLevel(MAP_SIZE);
+        (DrawableList, TileArray) = mapGenerator.CreateRoomsLevel(MAP_SIZE);
         CollidableList = new();
 
         foreach (Drawable drawable in DrawableList)
@@ -76,6 +77,7 @@ public class CoreGame : Game
                 // To ensure only one click goes through
                 leftMouseDown = true;
                 GamePlayer.Target = new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter;
+                GamePlayer.Pathfind(TileArray);
             }
             else if (mouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
             {

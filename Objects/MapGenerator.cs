@@ -15,7 +15,7 @@ public class MapGenerator
         ScreenCenter = screenCenter;
     }
 
-    public List<Drawable> CreateRoomsLevel(int levelSize)
+    public (List<Drawable>, int[,]) CreateRoomsLevel(int levelSize)
     {
         // Create a level that splits down the rooms
         int[,] tileArray = new int[levelSize, levelSize];
@@ -40,7 +40,7 @@ public class MapGenerator
         CreateDoors(tileArray, roomList);
         PrintLevel(tileArray, levelSize);
 
-        return CreateDrawables(tileArray, levelSize);
+        return (CreateDrawables(tileArray, levelSize), tileArray);
     }
 
     public void CreateDoors(int[,] tileArray, List<Tuple<int, int, int, int>> roomList)
