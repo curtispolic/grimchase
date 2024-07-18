@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace grimchase.Objects;
 
@@ -16,6 +17,7 @@ public class Drawable
         GameParent = parent;
         Position = pos;
         ScreenCenter = screenCenter;
+        UpdateCollisionMasks();
     }
 
     public static int Comparison(Drawable a, Drawable b)
@@ -28,6 +30,10 @@ public class Drawable
     public virtual void LoadContent()
     {
         Offset = new(Texture.Width / 2, Texture.Height - 16);
+    }
+
+    public void UpdateCollisionMasks()
+    {
         CollisionMasks = new()
         {
             new((int)Position.X - 28, (int)Position.Y - 3, 56, 6),

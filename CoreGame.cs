@@ -47,14 +47,6 @@ public class CoreGame : Game
         (DrawableList, TileArray) = mapGenerator.CreateRoomsLevel(MAP_SIZE);
         CollidableList = new();
 
-        foreach (Drawable drawable in DrawableList)
-        {
-            if (drawable.Collision)
-            {
-                CollidableList.Add(drawable);
-            }
-        }
-
         pathfinder = new();
 
         GamePlayer = new(this, screenCenter);
@@ -64,6 +56,14 @@ public class CoreGame : Game
         FirstEnemy = new(this, screenCenter);
 
         DrawableList.Add(FirstEnemy);
+
+        foreach (Drawable drawable in DrawableList)
+        {
+            if (drawable.Collision)
+            {
+                CollidableList.Add(drawable);
+            }
+        }
 
         base.Initialize();
     }

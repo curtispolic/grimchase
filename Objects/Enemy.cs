@@ -15,6 +15,7 @@ public class Enemy : Drawable
         Target = Position;
         PathListToTarget = new();
         Behaviour = "idle";
+        Collision = true;
         LoadContent();
     }
 
@@ -55,7 +56,7 @@ public class Enemy : Drawable
 
         foreach (Drawable collidable in collidableList)
         {
-            if (collidable.CheckCollision(Position + step))
+            if (collidable.CheckCollision(Position + step) && collidable != this)
             {
                 Behaviour = "idle";
                 return;
@@ -63,16 +64,18 @@ public class Enemy : Drawable
         }
 
         Position += step;
+
+        UpdateCollisionMasks();
     }
 
     public override void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("guy");
-        Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
+        Texture = GameParent.Content.Load<Texture2D>("goblin");
+        base.LoadContent();
     }
 
     public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
-        spriteBatch.Draw(Texture, Position, null, Color.BlueViolet, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
     }
 }

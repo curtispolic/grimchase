@@ -13,13 +13,14 @@ public class Player : Drawable
     {
         Target = Position;
         PathListToTarget = new();
+        Collision = true;
         LoadContent();
     }
 
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("guy");
-        Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
+        base.LoadContent();
     }
 
     public void Update(GameTime gameTime, List<Drawable> collidableList)
@@ -45,13 +46,15 @@ public class Player : Drawable
 
         foreach (Drawable collidable in collidableList)
         {
-            if (collidable.CheckCollision(Position + step))
+            if (collidable.CheckCollision(Position + step) && collidable != this)
             {
                 return;
             }
         }
 
         Position += step;
+
+        UpdateCollisionMasks();
     }
 
     public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)

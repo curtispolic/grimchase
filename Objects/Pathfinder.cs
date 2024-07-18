@@ -24,7 +24,7 @@ public class Pathfinder
         (int X, int Y)[,] cameFrom = new (int, int)[tileArray.GetLength(0), tileArray.GetLength(1)];
 
         // gScore is the cost of the cheapest path to that node
-        int[,] gScore = new int[tileArray.GetLength(0), tileArray.GetLength(1)];
+        double[,] gScore = new double[tileArray.GetLength(0), tileArray.GetLength(1)];
         for (int i = 0; i < gScore.GetLength(0); i++)
         {
             for (int j = 0; j < gScore.GetLength(1); j++)
@@ -36,7 +36,7 @@ public class Pathfinder
 
         // fScore is gScore plus hueristic, representing best guess as cost of a path from start to finish
         // that goes through that node
-        int[,] fScore = new int[tileArray.GetLength(0), tileArray.GetLength(1)];
+        double[,] fScore = new double[tileArray.GetLength(0), tileArray.GetLength(1)];
         for (int i = 0; i < fScore.GetLength(0); i++)
         {
             for (int j = 0; j < fScore.GetLength(1); j++)
@@ -76,7 +76,7 @@ public class Pathfinder
                     // continue if wall
                     if (tileArray[neighbourIndex.X, neighbourIndex.Y] == 1) continue;
 
-                    int tentativeG = gScore[current.X, current.Y] + 1;
+                    double tentativeG = gScore[current.X, current.Y] + Math.Sqrt(Math.Abs(i) + Math.Abs(j));
                     if (tentativeG < gScore[neighbourIndex.X, neighbourIndex.Y])
                     {
                         // Better path to neighbour
@@ -122,8 +122,8 @@ public class Pathfinder
         return output;
     }
 
-    public int PathfindH((int X, int Y) goalIndex, (int X, int Y)hIndex)
+    public double PathfindH((int X, int Y) goalIndex, (int X, int Y)hIndex)
     {
-        return Math.Abs((int)goalIndex.X - hIndex.X) + (int)Math.Abs(goalIndex.Y - hIndex.Y);
+        return Math.Sqrt(Math.Abs(goalIndex.X - hIndex.X)^2 + Math.Abs(goalIndex.Y - hIndex.Y)^2);
     }
 }
