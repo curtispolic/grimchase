@@ -12,10 +12,12 @@ public class CoreGame : Game
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     public List<Drawable> DrawableList, CollidableList;
+    public Pathfinder pathfinder;
     public int[,] TileArray;
     public Player GamePlayer;
+    public Enemy FirstEnemy;
     public Vector2 mouseTarget;
-    public bool leftMouseDown;
+    public bool leftMouseDown, rightMouseDown;
 
     public CoreGame()
     {
@@ -34,6 +36,7 @@ public class CoreGame : Game
         Vector2 screenCenter = new(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
 
         leftMouseDown = false;
+        rightMouseDown = false;
         mouseTarget = screenCenter;
 
         int MAP_SIZE = 50;
@@ -52,9 +55,15 @@ public class CoreGame : Game
             }
         }
 
+        pathfinder = new();
+
         GamePlayer = new(this, screenCenter);
         
         DrawableList.Add(GamePlayer);
+
+        FirstEnemy = new(this, screenCenter);
+
+        DrawableList.Add(FirstEnemy);
 
         base.Initialize();
     }
@@ -76,16 +85,29 @@ public class CoreGame : Game
             {
                 // To ensure only one click goes through
                 leftMouseDown = true;
-                GamePlayer.Target = new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter;
-                GamePlayer.Pathfind(TileArray);
+                GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
+                GamePlayer.Target = GamePlayer.PathListToTarget[0];
             }
             else if (mouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
             {
                 leftMouseDown = false;
             }
+
+            // Right mouse down handling
+            if (mouseState.RightButton == ButtonState.Pressed && !rightMouseDown)
+            {
+                rightMouseDown = true;
+                FirstEnemy.Behaviour = "aggro";
+            }
+            else if (mouseState.RightButton == ButtonState.Released &&  rightMouseDown)
+            {
+                rightMouseDown = false;
+            }
         }
 
         GamePlayer.Update(gameTime, CollidableList);
+
+        FirstEnemy.Update(gameTime, CollidableList);
 
         base.Update(gameTime);
     }
@@ -97,6 +119,7 @@ public class CoreGame : Game
 
         _spriteBatch.Begin();
 
+        // Sort drawables top to bottom to draw in order
         DrawableList.Sort(Drawable.Comparison);
 
         // Draw all of the floor first to prevent any shenanigans

@@ -1,29 +1,39 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace grimchase.Objects;
 
-public class Player : Drawable
+public class Enemy : Drawable
 {
     public Vector2 Target;
     public List<Vector2> PathListToTarget;
-    public Player(CoreGame parent, Vector2 screenCenter): base(parent, new(64,0), screenCenter)
+    public string Behaviour;
+    public Enemy(CoreGame parent, Vector2 screenCenter): base(parent, new(256,0), screenCenter)
     {
         Target = Position;
         PathListToTarget = new();
+        Behaviour = "idle";
         LoadContent();
-    }
-
-    public override void LoadContent()
-    {
-        Texture = GameParent.Content.Load<Texture2D>("guy");
-        Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
     }
 
     public void Update(GameTime gameTime, List<Drawable> collidableList)
     {
+        switch (Behaviour)
+        {
+            case "aggro":
+                PathListToTarget = GameParent.pathfinder.Pathfind(GameParent.TileArray, Position, GameParent.GamePlayer.Position);
+                Target = PathListToTarget[0];
+                break;
+            case "wander":
+                // TODO
+                break;
+            default:
+                // For "idle" or incorrect, do nothing
+                break;
+        }
+
         // Return if at (or very close to) target (unless there's pathfinding left)
         if (Math.Abs(Target.X - Position.X) < 2 && Math.Abs(Target.Y - Position.Y) < 2)
         {
@@ -47,6 +57,7 @@ public class Player : Drawable
         {
             if (collidable.CheckCollision(Position + step))
             {
+                Behaviour = "idle";
                 return;
             }
         }
@@ -54,9 +65,14 @@ public class Player : Drawable
         Position += step;
     }
 
+    public override void LoadContent()
+    {
+        Texture = GameParent.Content.Load<Texture2D>("guy");
+        Offset = new(Texture.Width / 2, Texture.Height / 2 + 16);
+    }
+
     public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
-        // Intentional override to discard playerPos to call all Drawables together
-        spriteBatch.Draw(Texture, ScreenCenter, null, Color.White, 0f, Offset, Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(Texture, Position, null, Color.BlueViolet, 0f, Offset + playerPos - ScreenCenter, Vector2.One, SpriteEffects.None, 0f);
     }
 }

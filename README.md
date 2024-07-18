@@ -3,7 +3,7 @@
 Planned engine for an ARPG with various, undecided mechanics and features!
 
 Todo:
-- Enemies to battle
+- Combat
 - Skilling (i.e Runescape mining)
 - Loot / Inventory
 - Spells
@@ -21,3 +21,4 @@ Notes:
 Known Bugs:
 - Doors can be generated at a wall "T"
 - Pathfinding for small movements can be a bit dodgy
+- Enemies can get stuck on doors
