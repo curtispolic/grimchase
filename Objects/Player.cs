@@ -9,11 +9,18 @@ public class Player : Drawable
 {
     public Vector2 Target;
     public List<Vector2> PathListToTarget;
+    public int MaxHP, CurrentHP, MaxMP, CurrentMP;
     public Player(CoreGame parent, Vector2 screenCenter): base(parent, new(64,0), screenCenter)
     {
         Target = Position;
         PathListToTarget = new();
         Collision = true;
+
+        MaxHP = 100;
+        MaxMP = 100;
+        CurrentHP = 100;
+        CurrentMP = 100;
+
         LoadContent();
     }
 

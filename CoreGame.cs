@@ -16,6 +16,7 @@ public class CoreGame : Game
     public int[,] TileArray;
     public Player GamePlayer;
     public Enemy FirstEnemy;
+    public BottomUI bottomUI;
     public Vector2 mouseTarget;
     public bool leftMouseDown, rightMouseDown;
 
@@ -56,6 +57,8 @@ public class CoreGame : Game
         FirstEnemy = new(this, screenCenter);
 
         DrawableList.Add(FirstEnemy);
+
+        bottomUI = new(this, screenCenter);
 
         foreach (Drawable drawable in DrawableList)
         {
@@ -98,6 +101,7 @@ public class CoreGame : Game
             {
                 rightMouseDown = true;
                 FirstEnemy.Behaviour = "aggro";
+                GamePlayer.CurrentHP -= 10;
             }
             else if (mouseState.RightButton == ButtonState.Released &&  rightMouseDown)
             {
@@ -139,6 +143,8 @@ public class CoreGame : Game
                 thing.Draw(_spriteBatch, GamePlayer.Position);
             }
         }
+
+        bottomUI.Draw(_spriteBatch);
 
         _spriteBatch.End();
 

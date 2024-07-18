@@ -7,7 +7,6 @@ Todo:
 - Skilling (i.e Runescape mining)
 - Loot / Inventory
 - Spells
-- Mana / HP
 - Merchants
 - Improve Map Generation
     - Level types
