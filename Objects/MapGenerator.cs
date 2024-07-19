@@ -38,7 +38,6 @@ public class MapGenerator
 
         List<Tuple<int, int, int, int>> roomList = RecurseRooms(tileArray, 0, 0, levelSize - 1, levelSize - 1);
         CreateDoors(tileArray, roomList);
-        PrintLevel(tileArray, levelSize);
 
         return (CreateDrawables(tileArray, levelSize), tileArray);
     }

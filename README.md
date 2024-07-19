@@ -16,6 +16,7 @@ Notes:
 - Maintain VERY rudimentary loot to begin with
 - Map overlay or a minimap would be useful
 - Consider fog of war
+    - Lighting can be done by the colour field in a Draw() call
 
 Known Bugs:
 - Doors can be generated at a wall "T"

@@ -80,6 +80,21 @@ public class Enemy : Drawable
         base.LoadContent();
     }
 
+    public void TakeDamage(int damage)
+    {
+        CurrentHP -= damage;
+        if (CurrentHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        GameParent.DrawableList.Remove(this);
+        GameParent.CollidableList.Remove(this);
+    }
+
     public override void Draw(SpriteBatch spriteBatch, Vector2 playerPos)
     {
         // Backing for health bar

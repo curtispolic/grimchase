@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 using grimchase.Objects;
+using System;
 
 namespace grimchase;
 
@@ -88,8 +89,35 @@ public class CoreGame : Game
             {
                 // To ensure only one click goes through
                 leftMouseDown = true;
-                GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
-                GamePlayer.Target = GamePlayer.PathListToTarget[0];
+
+                bool enemyClick = false;
+                foreach (Rectangle mask in FirstEnemy.CollisionMasks)
+                {
+                    if (mask.Contains(new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter))
+                    {
+                        enemyClick = true;
+                        break;
+                    }
+                }
+
+                if (enemyClick)
+                {
+                    Vector2 distance = FirstEnemy.Position - GamePlayer.Position;
+                    if (Math.Abs(distance.X) < 64 && Math.Abs(distance.Y) < 32)
+                    {
+                        GamePlayer.Attack(FirstEnemy);
+                    }
+                    else
+                    {
+                        GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
+                        GamePlayer.Target = GamePlayer.PathListToTarget[0];
+                    }
+                }
+                else
+                {
+                    GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
+                    GamePlayer.Target = GamePlayer.PathListToTarget[0];
+                }
             }
             else if (mouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
             {
