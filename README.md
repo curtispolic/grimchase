@@ -3,7 +3,7 @@
 Planned engine for an ARPG with various, undecided mechanics and features!
 
 Todo:
-- Combat
+- Combat (make enemies fight back)
 - Skilling (i.e Runescape mining)
 - Loot / Inventory
 - Spells

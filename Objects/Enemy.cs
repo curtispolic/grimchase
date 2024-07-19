@@ -53,9 +53,15 @@ public class Enemy : Drawable
             }
         }
 
+        // step is direction towards target
         Vector2 step = Target - Position;
+        // get the unit circle version
         step /= step.Length();
+        // halve vertical speed because isometric
+        step.Y /= 2;
+        // adjust for framerate
         step *= (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+        // divide so not too fast
         step /= 5;
 
         foreach (Drawable collidable in collidableList)
