@@ -26,6 +26,12 @@ public class Inventory : Drawable
         Items[0,0] = new Ring(GameParent);
         TileOccupied[0,0] = true;
 
+        Items[1,1] = new Helmet(GameParent);
+        TileOccupied[1,1] = true;
+        TileOccupied[2,1] = true;
+        TileOccupied[1,2] = true;
+        TileOccupied[2,2] = true;
+
         Items[0,3] = new Ring(GameParent);
         TileOccupied[0,3] = true;
 

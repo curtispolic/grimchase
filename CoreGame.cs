@@ -6,7 +6,6 @@ using System;
 
 using grimchase.Objects;
 using grimchase.Objects.Characters;
-using System.Linq;
 
 namespace grimchase;
 
