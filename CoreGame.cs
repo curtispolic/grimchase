@@ -6,6 +6,7 @@ using System;
 
 using grimchase.Objects;
 using grimchase.Objects.Characters;
+using System.Linq;
 
 namespace grimchase;
 
@@ -20,7 +21,7 @@ public class CoreGame : Game
     public Enemy FirstEnemy;
     public BottomUI bottomUI;
     public Vector2 mouseTarget;
-    public bool leftMouseDown, rightMouseDown;
+    public bool leftMouseDown, rightMouseDown, iKeyDown;
 
     public CoreGame()
     {
@@ -40,6 +41,7 @@ public class CoreGame : Game
 
         leftMouseDown = false;
         rightMouseDown = false;
+        iKeyDown = false;
         mouseTarget = screenCenter;
 
         int MAP_SIZE = 50;
@@ -81,6 +83,7 @@ public class CoreGame : Game
     protected override void Update(GameTime gameTime)
     {
         var mouseState = Mouse.GetState();
+        var keyboardState = Keyboard.GetState();
 
         // Handle instances where the mouse is inside the game window
         if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
@@ -138,6 +141,17 @@ public class CoreGame : Game
             }
         }
 
+
+        if (keyboardState.IsKeyDown(Keys.I) && !iKeyDown)
+        {
+            iKeyDown = true;
+            GamePlayer.Invent.Visible = !GamePlayer.Invent.Visible;
+        }
+        else if (!keyboardState.IsKeyDown(Keys.I) && iKeyDown)
+        {
+            iKeyDown = false;
+        }
+
         GamePlayer.Update(gameTime, CollidableList);
 
         FirstEnemy.Update(gameTime, CollidableList);
@@ -174,6 +188,8 @@ public class CoreGame : Game
         }
 
         bottomUI.Draw(_spriteBatch);
+
+        if (GamePlayer.Invent.Visible) GamePlayer.Invent.Draw(_spriteBatch);
 
         _spriteBatch.End();
 

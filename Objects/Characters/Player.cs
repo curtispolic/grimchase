@@ -8,10 +8,13 @@ namespace grimchase.Objects.Characters;
 public class Player : Character
 {
     public int MaxMP, CurrentMP;
+    public Inventory Invent;
     public Player(CoreGame parent, Vector2 screenCenter): base(parent, new(64,0), screenCenter)
     {
         MaxMP = 100;
         CurrentMP = 100;
+
+        Invent = new(parent, screenCenter);
 
         LoadContent();
     }
