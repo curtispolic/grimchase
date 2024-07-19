@@ -21,4 +21,3 @@ Notes:
 Known Bugs:
 - Doors can be generated at a wall "T"
 - Pathfinding for small movements can be a bit dodgy
-- Enemies can get stuck on doors

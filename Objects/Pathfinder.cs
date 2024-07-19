@@ -76,6 +76,12 @@ public class Pathfinder
                     // continue if wall
                     if (tileArray[neighbourIndex.X, neighbourIndex.Y] == 1) continue;
 
+                    // dont allow diagonal move if wall could block
+                    if (i != 0 && j != 0)
+                    {
+                        if (tileArray[neighbourIndex.X, current.Y] == 1 || tileArray[current.X, neighbourIndex.Y] == 1) continue;
+                    }
+
                     double tentativeG = gScore[current.X, current.Y] + Math.Sqrt(Math.Abs(i) + Math.Abs(j));
                     if (tentativeG < gScore[neighbourIndex.X, neighbourIndex.Y])
                     {
