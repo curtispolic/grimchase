@@ -7,11 +7,11 @@ namespace grimchase.Objects;
 
 public class MapGenerator
 {
-    public CoreGame Parent;
+    public CoreGame GameParent;
     public Vector2 ScreenCenter;
     public MapGenerator(CoreGame parent, Vector2 screenCenter)
     {
-        Parent = parent;
+        GameParent = parent;
         ScreenCenter = screenCenter;
     }
 
@@ -283,11 +283,11 @@ public class MapGenerator
                 Vector2 objpos = new((i+j)*32, (j-i)*16);
                 if (tilesArray[i,j] == 1)
                 {
-                    output.Add(new Wall(Parent, objpos, ScreenCenter));
+                    output.Add(new Wall(GameParent, objpos, ScreenCenter));
                 }
                 else if (tilesArray[i,j] == 2)
                 {
-                    output.Add(new Tile(Parent, objpos, ScreenCenter));
+                    output.Add(new Tile(GameParent, objpos, ScreenCenter));
                 }
             }
         }

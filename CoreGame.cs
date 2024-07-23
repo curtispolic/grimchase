@@ -6,6 +6,7 @@ using System;
 
 using grimchase.Objects;
 using grimchase.Objects.Characters;
+using grimchase.Objects.Controllers;
 
 namespace grimchase;
 
@@ -14,12 +15,12 @@ public class CoreGame : Game
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     public List<Drawable> DrawableList, CollidableList;
+    public MouseHandler mouseHandler;
     public Pathfinder pathfinder;
     public int[,] TileArray;
     public Player GamePlayer;
     public Enemy FirstEnemy;
     public BottomUI bottomUI;
-    public Vector2 mouseTarget;
     public bool leftMouseDown, rightMouseDown, iKeyDown;
 
     public CoreGame()
@@ -41,7 +42,8 @@ public class CoreGame : Game
         leftMouseDown = false;
         rightMouseDown = false;
         iKeyDown = false;
-        mouseTarget = screenCenter;
+
+        mouseHandler = new(this);
 
         int MAP_SIZE = 50;
 
@@ -84,62 +86,8 @@ public class CoreGame : Game
         var mouseState = Mouse.GetState();
         var keyboardState = Keyboard.GetState();
 
-        // Handle instances where the mouse is inside the game window
-        if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
-        {
-            // Left mouse down handling
-            if (mouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
-            {
-                // To ensure only one click goes through
-                leftMouseDown = true;
-
-                bool enemyClick = false;
-                foreach (Rectangle mask in FirstEnemy.CollisionMasks)
-                {
-                    if (mask.Contains(new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter))
-                    {
-                        enemyClick = true;
-                        break;
-                    }
-                }
-
-                if (enemyClick)
-                {
-                    Vector2 distance = FirstEnemy.Position - GamePlayer.Position;
-                    if (Math.Abs(distance.X) < 64 && Math.Abs(distance.Y) < 32)
-                    {
-                        GamePlayer.Attack(FirstEnemy);
-                    }
-                    else
-                    {
-                        GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
-                        GamePlayer.Target = GamePlayer.PathListToTarget[0];
-                    }
-                }
-                else
-                {
-                    GamePlayer.PathListToTarget = pathfinder.Pathfind(TileArray, GamePlayer.Position, new Vector2(mouseState.X, mouseState.Y) + GamePlayer.Position - GamePlayer.ScreenCenter);
-                    GamePlayer.Target = GamePlayer.PathListToTarget[0];
-                }
-            }
-            else if (mouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
-            {
-                leftMouseDown = false;
-            }
-
-            // Right mouse down handling
-            if (mouseState.RightButton == ButtonState.Pressed && !rightMouseDown)
-            {
-                rightMouseDown = true;
-                FirstEnemy.Behaviour = "aggro";
-                GamePlayer.CurrentHP -= 10;
-            }
-            else if (mouseState.RightButton == ButtonState.Released &&  rightMouseDown)
-            {
-                rightMouseDown = false;
-            }
-        }
-
+        // Use this to handle all the mouse events
+        mouseHandler.Update(mouseState, graphics);
 
         if (keyboardState.IsKeyDown(Keys.I) && !iKeyDown)
         {
